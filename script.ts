@@ -1,20 +1,23 @@
+const refreshButton: HTMLButtonElement = document.querySelector("button")
 const canvas: HTMLCanvasElement = document.querySelector("canvas")
 const ctx: CanvasRenderingContext2D = canvas.getContext("2d")
 
 canvas.width = window.innerWidth
-canvas.height = window.innerHeight
+canvas.height = window.innerHeight * 0.9
 
 // updating the circle position after the screen resizing
-window.addEventListener("resize", (): void => {
+window.addEventListener("resize", () => {
     canvas.width = window.innerWidth
-    canvas.height = window.innerHeight
+    canvas.height = window.innerHeight * 0.9
 
-    balls = []
-    ctx.clearRect(0, 0, canvas.width, canvas.height)
-
-    circleX = canvas.width / (radius * 2)
-    circleY = canvas.height / (radius * 2)
+    resetValues()
     drawCircleInstantly()
+})
+
+// clearing canvas and drawing circle again
+refreshButton.addEventListener("click", () => {
+    resetValues()
+    rangeIndex = 0
 })
 
 const DEGREES: number = 360
@@ -113,6 +116,14 @@ const drawCircleInstantly = (): void => {
         addBallX(i)
         addBallY(i)
     }
+}
+
+const resetValues = (): void => {
+    balls = []
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+
+    circleX = canvas.width / (radius * 2)
+    circleY = canvas.height / (radius * 2)
 }
 
 const init = (): void => {

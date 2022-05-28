@@ -1,16 +1,19 @@
+const refreshButton = document.querySelector("button");
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+canvas.height = window.innerHeight * 0.9;
 // updating the circle position after the screen resizing
 window.addEventListener("resize", () => {
     canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    balls = [];
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    circleX = canvas.width / (radius * 2);
-    circleY = canvas.height / (radius * 2);
+    canvas.height = window.innerHeight * 0.9;
+    resetValues();
     drawCircleInstantly();
+});
+// clearing canvas and drawing circle again
+refreshButton.addEventListener("click", () => {
+    resetValues();
+    rangeIndex = 0;
 });
 const DEGREES = 360;
 const QUARTER = DEGREES / 4;
@@ -75,6 +78,12 @@ const drawCircleInstantly = () => {
         addBallX(i);
         addBallY(i);
     }
+};
+const resetValues = () => {
+    balls = [];
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    circleX = canvas.width / (radius * 2);
+    circleY = canvas.height / (radius * 2);
 };
 const init = () => {
     drawCircle();
