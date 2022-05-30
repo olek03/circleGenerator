@@ -18,11 +18,11 @@ refreshButton.addEventListener("click", () => {
 const DEGREES = 360;
 const QUARTER = DEGREES / 4;
 const ANIMATION_SPEED = 60;
-const range = 7.25; // 7.25 = full circle, 0 = four dots
-const radius = canvas.height > canvas.width ? canvas.width / 20 : canvas.height / 20;
+const centeredPosition = canvas.height > canvas.width ? canvas.width / 20 : canvas.height / 20;
 const dotThickness = 0.05;
-let circleX = canvas.width / (radius * 2);
-let circleY = canvas.height / (radius * 2);
+const radius = 7;
+let circleX = canvas.width / (centeredPosition * 2);
+let circleY = canvas.height / (centeredPosition * 2);
 class Ball {
     constructor(x, y, color) {
         this.pos = { x: x, y: y };
@@ -31,7 +31,7 @@ class Ball {
     draw() {
         ctx.fillStyle = this.color;
         ctx.beginPath();
-        ctx.arc(this.pos.x, this.pos.y, dotThickness * radius, 0, Math.PI * 2);
+        ctx.arc(this.pos.x, this.pos.y, dotThickness * centeredPosition, 0, Math.PI * 2);
         ctx.fill();
     }
 }
@@ -40,12 +40,12 @@ const renderBalls = () => balls.forEach((ball) => ball.draw());
 // adds 180 dots about the x axis
 const addBallX = (i) => {
     const center = { x: circleX, y: circleY };
-    const posX = (i * (range / QUARTER));
-    const posY = Math.sqrt(25 - Math.pow(posX, 2));
-    const ballPos1 = { x: (center.x + posX) * radius, y: (center.y + posY) * radius };
-    const ballPos2 = { x: (center.x - posX) * radius, y: (center.y + posY) * radius };
-    const ballPos3 = { x: (center.x + posX) * radius, y: (center.y - posY) * radius };
-    const ballPos4 = { x: (center.x - posX) * radius, y: (center.y - posY) * radius };
+    const posX = i * (radius / QUARTER);
+    const posY = Math.sqrt(Math.pow(radius, 2) - Math.pow(posX, 2));
+    const ballPos1 = { x: (center.x + posX) * centeredPosition, y: (center.y + posY) * centeredPosition };
+    const ballPos2 = { x: (center.x - posX) * centeredPosition, y: (center.y + posY) * centeredPosition };
+    const ballPos3 = { x: (center.x + posX) * centeredPosition, y: (center.y - posY) * centeredPosition };
+    const ballPos4 = { x: (center.x - posX) * centeredPosition, y: (center.y - posY) * centeredPosition };
     balls.push(new Ball(ballPos1.x, ballPos1.y));
     balls.push(new Ball(ballPos2.x, ballPos2.y));
     balls.push(new Ball(ballPos3.x, ballPos3.y));
@@ -54,12 +54,12 @@ const addBallX = (i) => {
 // adds 180 dots about y axis
 const addBallY = (i) => {
     const center = { x: circleX, y: circleY };
-    const posY = (i * (range / QUARTER));
-    const posX = Math.sqrt(25 - Math.pow(posY, 2));
-    const ballPos1 = { x: (center.x + posX) * radius, y: (center.y + posY) * radius };
-    const ballPos2 = { x: (center.x - posX) * radius, y: (center.y + posY) * radius };
-    const ballPos3 = { x: (center.x + posX) * radius, y: (center.y - posY) * radius };
-    const ballPos4 = { x: (center.x - posX) * radius, y: (center.y - posY) * radius };
+    const posY = i * (radius / QUARTER);
+    const posX = Math.sqrt(Math.pow(radius, 2) - Math.pow(posY, 2));
+    const ballPos1 = { x: (center.x + posX) * centeredPosition, y: (center.y + posY) * centeredPosition };
+    const ballPos2 = { x: (center.x - posX) * centeredPosition, y: (center.y + posY) * centeredPosition };
+    const ballPos3 = { x: (center.x + posX) * centeredPosition, y: (center.y - posY) * centeredPosition };
+    const ballPos4 = { x: (center.x - posX) * centeredPosition, y: (center.y - posY) * centeredPosition };
     balls.push(new Ball(ballPos1.x, ballPos1.y));
     balls.push(new Ball(ballPos2.x, ballPos2.y));
     balls.push(new Ball(ballPos3.x, ballPos3.y));
@@ -67,14 +67,14 @@ const addBallY = (i) => {
 };
 let rangeIndex = 0;
 const drawCircle = () => {
-    if (rangeIndex >= 45)
+    if (rangeIndex >= QUARTER)
         return;
     addBallX(rangeIndex);
     addBallY(rangeIndex);
     rangeIndex++;
 };
 const drawCircleInstantly = () => {
-    for (let i = 0; i < 45; i++) {
+    for (let i = 0; i < QUARTER; i++) {
         addBallX(i);
         addBallY(i);
     }
@@ -82,8 +82,8 @@ const drawCircleInstantly = () => {
 const resetValues = () => {
     balls = [];
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    circleX = canvas.width / (radius * 2);
-    circleY = canvas.height / (radius * 2);
+    circleX = canvas.width / (centeredPosition * 2);
+    circleY = canvas.height / (centeredPosition * 2);
 };
 const init = () => {
     drawCircle();
